@@ -69,7 +69,7 @@ mv ~/klipper ~/klipper_old
 ```
 Then clone the Danger Klipper repo and restart the klipper service:
 ```
-https://github.com/DangerKlippers/danger-klipper.git ~/klipper
+git clone https://github.com/DangerKlippers/danger-klipper.git ~/klipper
 sudo systemctl restart klipper
 ```
 ### Using KIAUH
