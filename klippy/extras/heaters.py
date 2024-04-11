@@ -130,7 +130,7 @@ class Heater:
                 "watermark": ControlBangBang,
                 "pid": ControlPID,
                 "pid_v": ControlVelocityPID,
-                "positional": ControlPositionalPID,
+                "pid_p": ControlPositionalPID,
             }
         )
         return algos[profile["control"]](profile, self, load_clean)
@@ -318,7 +318,7 @@ class Heater:
                 temp_profile["max_delta"] = config_section.getfloat(
                     "max_delta", 2.0, above=0.0
                 )
-            elif control == "pid" or control == "pid_v" or control == "positional":
+            elif control == "pid" or control == "pid_v" or control == "pid_p":
                 for key, (type, placeholder) in PID_PROFILE_OPTIONS.items():
                     can_be_none = (
                         key != "pid_kp" and key != "pid_ki" and key != "pid_kd"
@@ -894,7 +894,7 @@ class ControlPositionalPID:
         return self.profile
    
     def get_type(self):
-        return 'positional'
+        return 'pid_p'
 
 ######################################################################
 # Sensor and heater lookup
