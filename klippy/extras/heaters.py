@@ -842,7 +842,7 @@ class ControlPositionalPID:
         )
         self.dt = heater.pwm_delay
         self.smooth = 1. + smooth_time / self.dt
-        self.heater.set_inv_smooth_time(1.0 / self.smooth_time)
+        self.heater.set_inv_smooth_time(1.0 / smooth_time)
         self.prev_temp = (
             AMBIENT_TEMP
             if load_clean
@@ -893,7 +893,7 @@ class ControlPositionalPID:
                 or abs(self.prev_der) > PID_SETTLE_SLOPE)
 
     def update_smooth_time(self):
-        self.smooth_time = self.heater.get_smooth_time()  # smoothing window
+        self.smooth = 1. + self.heater.get_smooth_time() / self.dt
 
     def get_profile(self):
         return self.profile
