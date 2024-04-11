@@ -841,8 +841,13 @@ class ControlPositionalPID:
             else profile["smooth_time"]
         )
         self.dt = heater.pwm_delay
-        self.smooth = 1. + heater.get_smooth_time() / self.dt
-        self.prev_temp = AMBIENT_TEMP
+        self.smooth = 1. + smooth_time / self.dt
+        self.heater.set_inv_smooth_time(1.0 / self.smooth_time)
+        self.prev_temp = (
+            AMBIENT_TEMP
+            if load_clean
+            else self.heater.get_temp(self.heater.reactor.monotonic())[0]
+        )
         self.prev_err = 0.
         self.prev_der = 0.
         self.int_sum = 0.
@@ -851,7 +856,7 @@ class ControlPositionalPID:
         # calculate the error
         err = target_temp - temp
         # calculate the current integral amount using the Trapezoidal rule
-        ic =  ((self.prev_err + err) / 2.) * self.dt
+        ic = ((self.prev_err + err) / 2.) * self.dt
         i = self.int_sum + ic
         # calculate the current derivative using a modified moving average,
         # and derivative on measurement, to account for derivative kick
@@ -886,13 +891,13 @@ class ControlPositionalPID:
         temp_diff = target_temp - smoothed_temp
         return (abs(temp_diff) > PID_SETTLE_DELTA
                 or abs(self.prev_der) > PID_SETTLE_SLOPE)
-   
+
     def update_smooth_time(self):
         self.smooth_time = self.heater.get_smooth_time()  # smoothing window
 
     def get_profile(self):
         return self.profile
-   
+
     def get_type(self):
         return 'pid_p'
 
