@@ -56,7 +56,11 @@ class PIDCalibrate:
             "with these parameters and restart the printer."
             % (target, Kp, Ki, Kd, heater_name, tolerance, profile_name)
         )
-        control = "pid_v" if old_control.get_type() == "pid_v" else "pid"
+        control = (
+            "pid_v"
+            if old_control.get_type() == "pid_v"
+            else "pid_p" if old_control.get_type() == "pid_p" else "pid"
+        )
 
         profile = {
             "pid_target": target,
